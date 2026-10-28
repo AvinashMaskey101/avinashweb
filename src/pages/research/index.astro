@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import Ref from '../../components/Ref.astro';
+import { site, interests } from '../../data/site';
+import { workingPapers, thesis, presentations, earlierWork, metacognition } from '../../data/research';
+import { scholarlyArticle } from '../../lib/cite';
+
+const toc = [
+  { id: 'agenda', label: 'Agenda' },
+  { id: 'current', label: 'Current research' },
+  { id: 'earlier', label: 'Earlier work' },
+];
+const meta = workingPapers[1];
+---
+<Base
+  title="Research"
+  description="Research by Avinash Maskey on digital platforms and fintech, causal and machine learning methods for economic data, and metacognitive learning in LMS settings."
+  toc={toc}
+  jsonld={workingPapers.map(scholarlyArticle)}
+>
+  <header class="page-title">
+    <span class="m" aria-hidden="true">§</span>
+    <h1>Research</h1>
+    <p class="dek">Research on information systems, digital platforms and fintech, and educational technology.</p>
+  </header>
+
+  <Section id="agenda" num="1" title="Agenda">
+    <p>
+      I study how system design, policy and algorithmic interventions affect user behavior and
+      outcomes. Most of my data come from Nepal, where digital payments, online trading and
+      platform use have grown rapidly, often alongside sudden policy changes. This makes Nepal a
+      useful setting for studying adoption, disruption and resilience. In educational
+      technology, I study how learning platforms and AI tools influence the way students plan,
+      monitor and evaluate their own learning.
+    </p>
+    <p>
+      Across these projects I audit data before analysis, build pipelines that reproduce every
+      result from the raw files, correct for multiple testing, and compare predictive models
+      against simple benchmarks and realistic costs.
+    </p>
+    <div class="interests" style="margin-top: 1.4rem;">
+      {interests.map((i) => (
+        <div><h3>{i.title}</h3><p>{i.text}</p></div>
+      ))}
+    </div>
+    {site.openTo && (
+      <div class="note">
+        <p class="label">Research roles and collaboration</p>
+        <p>{site.openTo} <a href={`mailto:${site.emailPrimary}`}>Contact me</a>.</p>
+      </div>
+    )}
+  </Section>
+
+  <Section id="current" num="2" title="Current research">
+    <Ref paper={workingPapers[0]} n={1} />
+    <Ref paper={meta} n={2} />
+    <div class="row">
+      <span class="m"></span>
+      <p class="stage" style="margin-top: -0.4rem;"><span>Current stage</span> {metacognition.stage}</p>
+    </div>
+  </Section>
+
+  <Section id="earlier" num="3" title="Earlier work">
+    <Ref paper={thesis} n={3} />
+    {presentations.map((p, i) => <Ref paper={p} n={4 + i} />)}
+    {earlierWork.map((w) => (
+      <div class="row entry">
+        <span class="m">{w.year}</span>
+        <div><h3>{w.title}</h3><p class="detail">{w.text}</p></div>
+      </div>
+    ))}
+  </Section>
+</Base>

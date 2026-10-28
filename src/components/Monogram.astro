@@ -1,0 +1,10 @@
+---
+// The AM monogram, drawn from Schibsted Grotesk ExtraBold outlines so it looks
+// the same everywhere, with no font loading.
+interface Props { size?: number; title?: string }
+const { size = 34, title } = Astro.props;
+---
+<svg class="monogram" width={size} height={size} viewBox="0 0 64 64" role={title ? 'img' : undefined} aria-hidden={title ? undefined : 'true'} aria-label={title} xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="5" fill="currentColor" />
+  <path transform="translate(6.668 42.500) scale(0.014583)" fill="#fff" d="M4 0 534 -1440H1012L1540 0H1151L771 -1201L393 0ZM385 -362V-650H1155V-362ZM1596.04 0 1676.04 -1440H2261.04L2505.04 -240H2471.04L2716.04 -1440H3301.04L3381.04 0H3029.04L2967.04 -1186H2970.04L2713.04 0H2264.04L2007.04 -1186H2010.04L1948.04 0Z" />
+</svg>

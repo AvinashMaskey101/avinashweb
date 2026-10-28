@@ -1,0 +1,54 @@
+---
+// One numbered reference: [n] in the margin, citation in the text column,
+// small link tags underneath (full text, DOI, PDF, abstract, summary, BibTeX).
+import type { Paper } from '../data/research';
+import { me } from '../data/research';
+import { bibtex } from '../lib/cite';
+
+interface Props {
+  paper: Paper;
+  n: number;
+  showNote?: boolean;
+}
+const { paper: p, n, showNote = true } = Astro.props;
+const bib = bibtex(p);
+const bibId = `bib-${p.id}`;
+const titleHref = p.page ?? p.url ?? (p.doi ? `https://doi.org/${p.doi}` : undefined);
+const sep = (i: number) =>
+  i === 0 ? '' : i === p.authors.length - 1 ? (p.authors.length === 2 ? ' and ' : ', and ') : ', ';
+---
+<div class="row ref" id={p.id}>
+  <span class="m ref-n">[{n}]</span>
+  <div class="ref-body">
+    <p class="ref-cite">
+      <span class="ref-authors">
+        {p.authors.map((a, i) => <>{sep(i)}{a === me ? <strong>{a}</strong> : a}</>)}
+      </span>{' '}
+      ({p.year}).{' '}
+      {titleHref ? <a class="ref-title" href={titleHref}>{p.title}</a> : <span class="ref-title">{p.title}</span>}.
+      {p.venue && (
+        <> <em>{p.venue}</em>{p.volume && <>, <em>{p.volume}</em></>}{p.issue && <>({p.issue})</>}{p.pages && <>, {p.pages}</>}.</>
+      )}
+      {p.status && <> <span class="status">{p.status}</span></>}
+    </p>
+    <div class="tags">
+      {p.url && <a class="tag strong" href={p.url}>{p.urlLabel ?? 'Full text'}</a>}
+      {p.doi && <a class="tag strong" href={`https://doi.org/${p.doi}`}>DOI</a>}
+      {p.pdf && <a class="tag strong" href={p.pdf}>PDF</a>}
+      {p.page && <a class="tag strong" href={p.page}>Paper page</a>}
+      {showNote && p.note && (
+        <details class="tag-details">
+          <summary class="tag">Summary</summary>
+          <p class="ref-note">{p.note}</p>
+        </details>
+      )}
+      <details class="tag-details">
+        <summary class="tag">BibTeX</summary>
+        <div class="bib">
+          <pre id={bibId}>{bib}</pre>
+          <button type="button" class="copy" data-copy={bibId}>Copy</button>
+        </div>
+      </details>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import Ref from '../components/Ref.astro';
+import { site } from '../data/site';
+import { publications, workingPapers, presentations, thesis } from '../data/research';
+import { scholarlyArticle } from '../lib/cite';
+
+const toc = [
+  { id: 'journal', label: 'Journal articles' },
+  { id: 'working', label: 'Current research' },
+  { id: 'talks', label: 'Presentations' },
+  { id: 'thesis', label: 'Thesis' },
+];
+let n = 0;
+const next = () => ++n;
+---
+<Base
+  title="Publications"
+  description="Publications and working papers by Avinash Maskey in the SEBON Journal and Advances in Mobile Learning Educational Research, with BibTeX for each."
+  toc={toc}
+  jsonld={[...publications, ...workingPapers].map(scholarlyArticle)}
+>
+  <header class="page-title">
+    <span class="m" aria-hidden="true">§</span>
+    <h1>Publications</h1>
+    <p class="dek">
+      Peer-reviewed articles, current research and talks.
+      {site.links.scholar && <>Citation counts are on <a href={site.links.scholar} rel="me">Google Scholar</a>.</>}
+    </p>
+  </header>
+
+  <Section id="journal" num="1" title="Journal articles">
+    {publications.map((p) => <Ref paper={p} n={next()} />)}
+  </Section>
+
+  <Section id="working" num="2" title="Current research">
+    {workingPapers.map((p) => <Ref paper={p} n={next()} />)}
+  </Section>
+
+  <Section id="talks" num="3" title="Conference presentations">
+    {presentations.map((p) => <Ref paper={p} n={next()} />)}
+  </Section>
+
+  <Section id="thesis" num="4" title="Thesis">
+    <Ref paper={thesis} n={next()} />
+  </Section>
+</Base>

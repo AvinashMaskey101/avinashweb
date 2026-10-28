@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { site } from '../data/site';
+import { education, studentLife, prajanya, finance, methods, honors } from '../data/profile';
+
+const toc = [
+  { id: 'education', label: 'Education' },
+  { id: 'student', label: 'Student years' },
+  { id: 'industry', label: 'Industry' },
+  { id: 'finance', label: 'Finance and banking' },
+  { id: 'methods', label: 'Methods and tools' },
+  { id: 'honors', label: 'Honors' },
+];
+---
+<Base
+  title="Background"
+  description="Background of Avinash Maskey: education, student leadership at Kist College, co-founding Prajanya Soft, and earlier work in banking and financial analysis."
+  toc={toc}
+>
+  <header class="page-title">
+    <span class="m" aria-hidden="true">§</span>
+    <h1>Background</h1>
+    <p class="dek">
+      Education, student leadership and industry experience that shaped my work as a teacher
+      and researcher.
+    </p>
+    <p class="actions" style="margin-top: 1.3rem;">
+      <a class="button" href={site.cvPdf}>Download CV (PDF)</a>
+    </p>
+  </header>
+
+  <Section id="education" num="1" title="Education">
+    {education.map((e) => (
+      <div class="row entry">
+        <span class="m">{e.years}</span>
+        <div>
+          <h3>{e.degree}</h3>
+          <p class="org">{e.school}</p>
+          <p class="detail">{e.detail}</p>
+          {e.extra && <p class="detail">{e.extra}</p>}
+        </div>
+      </div>
+    ))}
+  </Section>
+
+  <Section id="student" num="2" title="Student years at Kist College">
+    <p>{studentLife.intro}</p>
+    <ul class="bullets">
+      {studentLife.items.map((i) => <li>{i}</li>)}
+    </ul>
+    <div class="note">
+      <p class="label">First teaching appointment</p>
+      <p>{studentLife.return}</p>
+    </div>
+  </Section>
+
+  <Section id="industry" num="3" title="Prajanya Soft">
+    <p class="small muted" style="margin-bottom: 0.4rem;">{prajanya.roles} · {prajanya.period}</p>
+    <p>{prajanya.intro}</p>
+    <h3 class="subhead">Selected products</h3>
+    <div class="cards">
+      {prajanya.products.map((p) => (
+        <div class="card"><h3>{p.title}</h3><p>{p.text}</p></div>
+      ))}
+    </div>
+    <p>{prajanya.lesson}</p>
+  </Section>
+
+  <Section id="finance" num="4" title="Finance and banking">
+    {finance.map((f) => (
+      <div class="row entry">
+        <span class="m">{f.years}</span>
+        <div>
+          <h3>{f.title}</h3>
+          <p class="org">{f.org} <span class="when">· {f.when}</span></p>
+          {f.text && <p class="detail">{f.text}</p>}
+        </div>
+      </div>
+    ))}
+  </Section>
+
+  <Section id="methods" num="5" title="Methods and tools">
+    <dl class="kv">
+      {methods.map((m) => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}
+    </dl>
+  </Section>
+
+  <Section id="honors" num="6" title="Honors">
+    <ul class="bullets">
+      {honors.map((h) => <li>{h}</li>)}
+    </ul>
+  </Section>
+</Base>

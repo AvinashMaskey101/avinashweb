@@ -1,0 +1,241 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import { site } from '../../data/site';
+import { workingPapers, featured } from '../../data/research';
+import { bibtex, plainCitation, scholarlyArticle } from '../../lib/cite';
+
+const p = workingPapers[0];
+const url = new URL(p.page!, site.url).href;
+
+// Google Scholar reads these tags to index a paper page.
+const meta = [
+  { name: 'citation_title', content: p.title },
+  { name: 'citation_author', content: 'Maskey, Avinash' },
+  { name: 'citation_author_institution', content: 'Kathmandu University' },
+  { name: 'citation_author_email', content: site.emailPrimary },
+  { name: 'citation_publication_date', content: '2026/10' },
+  { name: 'citation_technical_report_institution', content: 'Kathmandu University' },
+  { name: 'citation_abstract_html_url', content: url },
+  { name: 'citation_language', content: 'en' },
+  { name: 'citation_keywords', content: featured.keywords.join('; ') },
+  ...(p.pdf ? [{ name: 'citation_pdf_url', content: new URL(p.pdf, site.url).href }] : []),
+];
+
+const article = {
+  ...scholarlyArticle(p),
+  abstract: featured.abstract,
+  keywords: featured.keywords.join(', '),
+  about: ['Nepal Stock Exchange', 'financial connectedness', 'forecasting', 'data quality'],
+  isBasedOn: { '@type': 'Dataset', name: 'NEPSE index history', url: 'https://www.sharesansar.com/indices-sub-indices' },
+};
+
+const toc = [
+  { id: 'abstract', label: 'Abstract' },
+  { id: 'questions', label: 'Research questions' },
+  { id: 'data', label: 'Data' },
+  { id: 'methods', label: 'Methods' },
+  { id: 'forecasting', label: 'Forecasting and trading test' },
+  { id: 'results', label: 'Main results' },
+  { id: 'reproducibility', label: 'Reproducibility' },
+  { id: 'cite', label: 'How to cite' },
+];
+const bibId = 'bib-feature';
+const mailto = `mailto:${site.emailPrimary}?subject=${encodeURIComponent('Manuscript request: ' + p.title)}`;
+---
+<Base
+  title="NEPSE Sector Connectedness and Lead-Lag"
+  description="Working paper by Avinash Maskey on shock spillovers across ten Nepal Stock Exchange sector indices, using Granger tests, Diebold-Yilmaz connectedness and ML."
+  ogType="article"
+  meta={meta}
+  jsonld={[article]}
+  toc={toc}
+>
+  <header class="page-title">
+    <span class="m">{p.status}<br />Oct {p.year}</span>
+    <h1 class="long">{p.title}</h1>
+    <p class="authorline">
+      <strong>{site.name}</strong><br />
+      <span>{site.department}, {site.school}, {site.institution}, Nepal</span>
+    </p>
+    <p class="tags" style="margin-top: 1rem;">
+      {p.pdf ? <a class="tag strong" href={p.pdf}>PDF</a> : <a class="tag strong" href={mailto}>Request the manuscript</a>}
+      <a class="tag" href="#cite">BibTeX</a>
+      <a class="tag" href="/research/">All research</a>
+    </p>
+  </header>
+
+  <Section id="abstract" num="1" title="Abstract">
+    <p>{featured.abstract}</p>
+    <p class="keywords"><i>Index terms:</i> {featured.keywords.join(', ')}.</p>
+  </Section>
+
+  <Section id="questions" num="2" title="Research questions">
+    <ol class="questions">
+      {featured.questions.map((q) => <li>{q}</li>)}
+    </ol>
+    <p>
+      The paper makes four contributions. It documents a date-alignment protocol for compiled
+      market data and shows on real and simulated data that a one-day misalignment manufactures
+      Granger causality, a data-quality point that applies to any study joining series from
+      different sources. It gives a broad picture of connectedness across ten to twelve NEPSE
+      sectors and shows how the roles of banks and hydropower changed. It explains a puzzle in
+      market-lead regressions. And it shows that tree-based models find a real but small
+      directional signal that does not survive realistic trading costs, as weak-form efficiency
+      with costs would predict.
+    </p>
+  </Section>
+
+  <Section id="data" num="3" title="Data">
+    <h3 class="inline" style="margin-top: 0;">Source and coverage</h3>
+    <p>
+      Daily closing values and turnover for 18 NEPSE indices were collected from the public index
+      history published by <a href="https://www.sharesansar.com/indices-sub-indices">ShareSansar</a>,
+      using a purpose-built scraper that saves one file per index. The NEPSE index runs from
+      3 January 2010 and most sector sub-indices from 20 March 2011, to 16 October 2026. The raw
+      files are frozen with SHA-256 checksums, so any later change to them stops the pipeline.
+    </p>
+
+    <h3 class="inline">Audit and alignment</h3>
+    <p>
+      Every index was audited against the NEPSE trading calendar of 3,844 trading days for
+      missing and extra days, duplicate dates, non-positive values, large jumps, runs of identical
+      closing values and shifted dates. A rolling correlation scan compared each sector’s same-day
+      correlation with NEPSE against its correlation at shifts of one and two days. In the new
+      data, the same-day correlation is highest for every operating sector except the trading
+      index during 2017.
+    </p>
+    <p>
+      The same audit applied to the compiled file used in my master’s thesis produced different
+      results. Its finance column held the next trading day’s official value on 1,408 dates between
+      2014 and mid 2020; its hydropower column was two days ahead in 2016 to 2018; and its hotels
+      column was one or two days behind in 2015 to 2020. The errors came from how the file was
+      compiled, not from the source. Because NEPSE values are rounded until mid 2015 and the
+      reported percentage change is unreliable before 2016, all returns are recomputed from
+      closing values. Panels are built under six rules:
+    </p>
+    <ol class="rules">
+      <li>The NEPSE index defines the trading calendar.</li>
+      <li>Each index keeps only its own published values; nothing is forward-filled.</li>
+      <li>A day enters a panel only if every member has a value.</li>
+      <li>Returns are computed after matching, so each return covers the same two days for every sector.</li>
+      <li>Returns spanning a closure longer than 21 calendar days are removed (the 2015 earthquake and two COVID-19 closures in 2020).</li>
+      <li>Runs of five or more identical closing values are treated as publication failures and blanked.</li>
+    </ol>
+
+    <h3 class="inline">Trading-week changes</h3>
+    <p>
+      NEPSE changed its trading week four times in the sample: Sunday to Thursday until
+      16 May 2022, Monday to Friday until mid June 2022, a six-day week from 19 June to
+      16 September 2022, Sunday to Thursday again until 5 April 2026, and Monday to Friday since.
+      Each regime is recorded in the configuration file and checked automatically against the
+      days on which NEPSE actually traded. Each return carries a flag for the first session after
+      a weekend or holiday.
+    </p>
+
+    <div class="table-wrap">
+      <table class="booktabs">
+        <caption><b>Table 1.</b> Analysis panels. Days are daily returns after removing returns that span long closures. The NEPSE index enters every panel as a market control, never as a sector.</caption>
+        <thead>
+          <tr><th scope="col">Panel</th><th scope="col">Period</th><th scope="col" class="num">Sectors</th><th scope="col" class="num">Days</th><th scope="col">Members</th></tr>
+        </thead>
+        <tbody>
+          {featured.panels.map((r) => (
+            <tr><td class="nowrap"><strong>{r.panel}</strong></td><td class="nowrap">{r.period}</td><td class="num">{r.sectors}</td><td class="num">{r.days}</td><td class="small">{r.members}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section id="methods" num="4" title="Methods">
+    <p>
+      Returns are daily log returns in percent, computed from closing values. Unit roots and
+      stationarity are checked with augmented Dickey-Fuller and KPSS tests, and normality and
+      autocorrelation with Jarque-Bera and Ljung-Box tests.
+    </p>
+    <p>
+      Sector returns are modelled jointly as a vector autoregression with the lag order chosen
+      by the Akaike criterion (Schwarz and Hannan-Quinn as checks). Granger causality is tested
+      equation by equation with Wald statistics that use HC1 heteroskedasticity-consistent
+      standard errors, because returns show strong volatility clustering. With ten sectors there
+      are 90 directed pairs, so p-values are corrected with the Holm and Benjamini-Hochberg
+      procedures.
+    </p>
+    <p>
+      Generalized impulse responses, which do not depend on the ordering of the variables, show
+      how a shock to one sector reaches the others. The Diebold-Yilmaz framework turns the
+      generalized forecast error variance decomposition at a ten-day horizon into total,
+      directional and net spillover measures. Connectedness over time is traced with rolling
+      windows and with a time-varying parameter VAR. Finally, market-lead regressions are
+      rewritten to separate relative momentum from the lead of the market index.
+    </p>
+  </Section>
+
+  <Section id="forecasting" num="5" title="Forecasting and trading test">
+    <p>
+      The last 500 trading days of each panel, from 7 August 2024 to 16 October 2026, form the
+      test period. Every forecast of day <i>t</i> uses only data up to day <i>t</i>−1, and
+      hyperparameters were fixed in advance rather than tuned on the test period. Six models
+      forecast each sector’s next-day return: a random walk, the historical mean, a univariate AR
+      model, a rolling VAR, a random forest and XGBoost. The two tree models use 66 inputs: five
+      lags of every sector return and of the NEPSE return, and the previous day’s change in log
+      turnover for each series.
+    </p>
+    <p>
+      Accuracy is measured as each model’s RMSE relative to the random walk and tested with the
+      Diebold-Mariano statistic with the Harvey-Leybourne-Newbold correction. SHAP values show
+      which inputs the tree models use. A long-or-cash rule then turns each forecast into a
+      position, since short selling is not allowed on NEPSE. The baseline cost is 0.345% per buy
+      or sell (a 0.33% broker commission plus the 0.015% SEBON fee), with 0.255% for the largest
+      trades, and the break-even cost is reported for each strategy.
+    </p>
+  </Section>
+
+  <Section id="results" num="6" title="Main results">
+    <div class="table-wrap">
+      <table class="booktabs">
+        <caption><b>Table 2.</b> Headline results, main panel</caption>
+        <thead><tr><th scope="col">Result</th><th scope="col" class="num">Value</th></tr></thead>
+        <tbody>
+          {featured.findings.map((f) => <tr><td>{f.label}</td><td class="num">{f.value}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <p>
+      About 78% of a sector’s ten-day forecast uncertainty comes from other sectors. Commercial
+      banks changed from the main transmitter into a net receiver, while hydropower became a
+      transmitter. The results hold across lag orders, window lengths, a TVP-VAR, forecast
+      horizons and the changes in NEPSE’s trading week. For investors, diversification across
+      NEPSE sectors protects less than it used to. For researchers, the study shows what tested,
+      reproducible data pipelines add to empirical finance.
+    </p>
+  </Section>
+
+  <Section id="reproducibility" num="7" title="Reproducibility">
+    <p>
+      Every step is a numbered Python script driven by one configuration file, using statsmodels,
+      pandas, NumPy, scikit-learn, XGBoost and SHAP. Fifteen automatic tests check the data
+      contracts and the methods. One test plants a known lead in simulated data and checks that
+      it is found; another shifts one series by a day and checks that a false Granger link
+      appears. A full run from the frozen raw files reproduces every reported number with a
+      single command.
+    </p>
+    <div class="note">
+      <p class="label">Data and code availability</p>
+      <p>
+        The raw index files, the cleaned panels, the full pipeline, the tests and the scripts
+        behind every table and figure are available from the author.
+        Please <a href={mailto}>contact me</a> for the manuscript or the replication files.
+      </p>
+    </div>
+  </Section>
+
+  <Section id="cite" num="8" title="How to cite">
+    <p class="cite-box">{plainCitation(p)}</p>
+    <div class="bib">
+      <pre id={bibId}>{bibtex(p)}</pre>
+      <button type="button" class="copy" data-copy={bibId}>Copy</button>
+    </div>
+  </Section>
+</Base>

@@ -1,0 +1,16 @@
+---
+// A numbered section. The number sits in the left margin, like a paper.
+interface Props {
+  id: string;
+  num: number | string;
+  title: string;
+}
+const { id, num, title } = Astro.props;
+---
+<section class="sec" id={id} aria-labelledby={`${id}-h`}>
+  <div class="row sec-head">
+    <span class="m sec-num" aria-hidden="true">{num}</span>
+    <h2 id={`${id}-h`}>{title}</h2>
+  </div>
+  <slot />
+</section>

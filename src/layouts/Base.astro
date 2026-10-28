@@ -1,0 +1,184 @@
+---
+import '@fontsource-variable/source-serif-4/opsz.css';
+import '@fontsource-variable/source-serif-4/opsz-italic.css';
+import '@fontsource-variable/schibsted-grotesk/wght.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '../styles/global.css';
+import serifFont from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-opsz-normal.woff2?url';
+import headFont from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
+import Monogram from '../components/Monogram.astro';
+import { site } from '../data/site';
+import { graph, personNode, websiteNode } from '../lib/schema';
+
+interface Props {
+  title?: string; // omit on the home page
+  description?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  jsonld?: object[];
+  meta?: { name: string; content: string }[];
+  toc?: { id: string; label: string }[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  ogType = 'website',
+  jsonld = [],
+  meta = [],
+  toc = [],
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title
+  ? `${title} | ${site.name}`
+  : `${site.name} | ${site.role}, ${site.institution}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og.png', site.url).href;
+const path = Astro.url.pathname;
+
+const nav = [
+  { href: '/', label: 'About' },
+  { href: '/research/', label: 'Research' },
+  { href: '/publications/', label: 'Publications' },
+  { href: '/teaching/', label: 'Teaching' },
+  { href: '/background/', label: 'Background' },
+];
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+
+const ld = graph(personNode(), websiteNode(), ...jsonld);
+const updated = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const year = new Date().getFullYear();
+const hasAside = Astro.slots.has('aside') || toc.length > 0;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="preload" href={headFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta name="author" content={site.name} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light" />
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}, ${site.role}, ${site.institution}`} />
+    <meta property="og:locale" content="en_US" />
+    {ogType === 'profile' && <meta property="profile:first_name" content={site.givenName} />}
+    {ogType === 'profile' && <meta property="profile:last_name" content={site.familyName} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {meta.map((m) => <meta name={m.name} content={m.content} />)}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="masthead">
+      <div class="frame masthead-inner">
+        <a class="brand" href="/" aria-label={`${site.name}, home`}>
+          <Monogram size={38} />
+          <span class="brand-text">
+            <span class="brand-name">{site.name}</span>
+            <span class="brand-sub">{site.institution} · {site.location}</span>
+          </span>
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((n) => (
+              <li><a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a></li>
+            ))}
+            <li><a class="nav-cv" href={site.cvPdf}>CV <span aria-hidden="true">↓</span></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class:list={['frame', 'paper', { 'has-aside': hasAside }]}>
+      <slot />
+      {Astro.slots.has('aside') && <aside class="aside aside-home"><slot name="aside" /></aside>}
+      {toc.length > 0 && (
+        <aside class="aside aside-toc" aria-label="On this page">
+          <p class="label">On this page</p>
+          <ol>
+            {toc.map((t, i) => (
+              <li><a href={`#${t.id}`}><span class="toc-n">{i + 1}</span>{t.label}</a></li>
+            ))}
+          </ol>
+        </aside>
+      )}
+    </main>
+
+    <footer class="footer">
+      <div class="frame footer-grid">
+        <div class="footer-id">
+          <Monogram size={44} />
+          <div>
+            <p class="footer-name">{site.name}</p>
+            <p>{site.role}, {site.department}<br />{site.school}, {site.institution}</p>
+            <p>Co-founder, {site.company}</p>
+          </div>
+        </div>
+        <div>
+          <p class="footer-label">Contact</p>
+          <p>{site.location}</p>
+          <ul class="footer-list">
+            {site.emails.map((e) => (
+              <li><a href={`mailto:${e.address}`}>{e.address}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p class="footer-label">Profiles</p>
+          <ul class="footer-list">
+            {site.links.scholar && <li><a href={site.links.scholar} rel="me">Google Scholar</a></li>}
+            {site.links.orcid && <li><a href={site.links.orcid} rel="me">ORCID</a></li>}
+            {site.links.ssrn && <li><a href={site.links.ssrn} rel="me">SSRN</a></li>}
+            {site.links.linkedin && <li><a href={site.links.linkedin} rel="me">LinkedIn</a></li>}
+            {site.links.github && <li><a href={site.links.github} rel="me">GitHub</a></li>}
+            <li><a href={site.cvPdf}>Curriculum vitae (PDF)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="frame footer-base">
+        <p>© {year} {site.name}</p>
+        <p>Last updated {updated}</p>
+      </div>
+    </footer>
+
+    <script is:inline>
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-copy]');
+        if (!b) return;
+        var el = document.getElementById(b.getAttribute('data-copy'));
+        if (!el || !navigator.clipboard) return;
+        navigator.clipboard.writeText(el.textContent.trim()).then(function () {
+          var t = b.textContent;
+          b.textContent = 'Copied';
+          setTimeout(function () { b.textContent = t; }, 1500);
+        });
+      });
+    </script>
+  </body>
+</html>

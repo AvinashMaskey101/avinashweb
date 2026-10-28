@@ -1,0 +1,143 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import {
+  thisSemester,
+  kuCourses,
+  curriculum,
+  supervisionAreas,
+  earlierTeaching,
+  service,
+} from '../data/profile';
+
+const toc = [
+  { id: 'semester', label: 'This semester' },
+  { id: 'courses', label: 'Courses taught at KU' },
+  { id: 'curriculum', label: 'Curriculum development' },
+  { id: 'supervision', label: 'Supervision' },
+  { id: 'earlier', label: 'Earlier teaching' },
+  { id: 'service', label: 'Service' },
+];
+
+const courseJsonld = kuCourses.undergraduate.concat(kuCourses.graduate).map((c) => ({
+  '@type': 'Course',
+  courseCode: c.code,
+  name: c.title,
+  provider: { '@type': 'CollegeOrUniversity', name: 'Kathmandu University' },
+  instructor: { '@id': 'https://avinashmaskey.com.np/#person' },
+}));
+---
+<Base
+  title="Teaching"
+  description="Courses taught by Avinash Maskey at Kathmandu University: web applications, MIS, AI, databases, system analysis, and AI in STEAM Education, plus curriculum work."
+  toc={toc}
+  jsonld={courseJsonld}
+>
+  <header class="page-title">
+    <span class="m" aria-hidden="true">§</span>
+    <h1>Teaching</h1>
+    <p class="dek">
+      Nearly seven years of teaching information technology at Nepali universities, and
+      full-time at Kathmandu University since July 2025. I teach in the BTech Ed (IT), BIT and
+      Master of STEAM Education programs and develop curriculum for the department.
+    </p>
+  </header>
+
+  <Section id="semester" num="1" title="This semester">
+    <ul class="courses">
+      {thisSemester.courses.map((c) => (
+        <li>
+          <span class="code">{c.code}</span>
+          <span class="course-title">{c.title}{c.note && <span class="course-note"> ({c.note})</span>}</span>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="courses" num="2" title="Courses taught at Kathmandu University">
+    <p class="small muted" style="margin-bottom: 0.6rem;">Department of STEAM Education, School of Education · ordered by level and course code</p>
+    <h3 class="subhead">Undergraduate · BTech Ed (IT) and BIT</h3>
+    <ul class="courses">
+      {kuCourses.undergraduate.map((c) => (
+        <li><span class="code">{c.code}</span><span class="course-title">{c.title}</span></li>
+      ))}
+    </ul>
+    <h3 class="subhead">Graduate · Master of STEAM Education</h3>
+    <ul class="courses">
+      {kuCourses.graduate.map((c) => (
+        <li><span class="code">{c.code}</span><span class="course-title">{c.title}</span></li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="curriculum" num="3" title="Curriculum development">
+    <p>
+      Since October 2024 I have served as a curriculum designer and subject matter expert for
+      the Department of STEAM Education. I developed the following syllabi, including course
+      objectives, content and assessment design.
+    </p>
+    <h3 class="subhead">Master’s level</h3>
+    <ul class="courses">
+      {curriculum.graduate.map((c) => (
+        <li><span class="code">{c.code}</span><span class="course-title">{c.title}</span></li>
+      ))}
+    </ul>
+    <h3 class="subhead">Bachelor’s level · BTech Ed (IT) and BIT</h3>
+    <ul class="courses">
+      {curriculum.undergraduate.map((c) => (
+        <li>
+          <span class="code">{c.code === 'TBD' ? 'Code TBD' : c.code}</span>
+          <span class="course-title">{c.title}</span>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="supervision" num="4" title="Supervision">
+    <p>
+      I supervise undergraduate research projects in the following areas and guide students
+      through the capstone course (ITEX 499) and their internships.
+    </p>
+    <ul class="pills">
+      {supervisionAreas.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="small muted">Projects and internships are assessed through proposals, progress reviews, final reports and presentations.</p>
+  </Section>
+
+  <Section id="earlier" num="5" title="Earlier teaching, 2019 to 2025">
+    <p>
+      From November 2019 to July 2025 I taught part-time as Visiting and Adjunct Faculty at
+      colleges affiliated with Tribhuvan University and Purbanchal University, and as visiting
+      faculty at Kathmandu University. My first appointment was at Kist College, where I had
+      completed my bachelor’s degree a year earlier. Alongside classroom teaching, I supervised
+      internships and undergraduate research projects.
+    </p>
+    <h3 class="subhead">Courses</h3>
+    <ul class="pills">
+      {earlierTeaching.courses.map((c) => <li>{c}</li>)}
+    </ul>
+    <h3 class="subhead">Institutions</h3>
+    <div class="dated">
+      {earlierTeaching.institutions.map((t) => (
+        <div class="row">
+          <span class="m">{t.years}</span>
+          <p>{t.place} <span class="sub">· {t.programs}</span></p>
+        </div>
+      ))}
+    </div>
+    <h3 class="subhead">Guest lectures</h3>
+    <div class="dated">
+      {earlierTeaching.guest.map((g) => (
+        <div class="row"><span class="m">{g.year}</span><p>{g.text}</p></div>
+      ))}
+    </div>
+  </Section>
+
+  <Section id="service" num="6" title="Service">
+    <div class="dated">
+      {service.map((s) => (
+        <div class="row"><span class="m">{s.years}</span><p>{s.text}</p></div>
+      ))}
+    </div>
+  </Section>
+</Base>

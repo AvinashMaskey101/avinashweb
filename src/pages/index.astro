@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import Ref from '../components/Ref.astro';
+import { site, interests } from '../data/site';
+import { workingPapers, publications, featured, metacognition } from '../data/research';
+import { news, journey, thisSemester, kuCourses, curriculum } from '../data/profile';
+import { scholarlyArticle } from '../lib/cite';
+
+const [nepse, meta] = workingPapers;
+const profilePage = {
+  '@type': 'ProfilePage',
+  '@id': `${site.url}/#profile`,
+  url: `${site.url}/`,
+  name: `${site.name} | ${site.role}, ${site.institution}`,
+  mainEntity: { '@id': `${site.url}/#person` },
+  isPartOf: { '@id': `${site.url}/#website` },
+  dateModified: new Date().toISOString(),
+};
+
+// Years of teaching, counted from 2 November 2019.
+const start = new Date('2019-11-02');
+const years = Math.round((Date.now() - start.getTime()) / (365.25 * 24 * 3600 * 1000));
+const courseCount = kuCourses.undergraduate.length + kuCourses.graduate.length;
+const syllabusCount = curriculum.undergraduate.length + curriculum.graduate.length;
+const glance = [
+  { value: `${years} years`, label: 'teaching information technology at Nepali universities, since November 2019' },
+  { value: `${courseCount}`, label: 'courses taught at Kathmandu University' },
+  { value: `${syllabusCount}`, label: 'syllabi developed for the Department of STEAM Education' },
+  { value: `${publications.length}`, label: 'peer-reviewed journal articles' },
+  { value: '2022', label: 'co-founded Prajanya Soft' },
+];
+---
+<Base ogType="profile" jsonld={[profilePage, ...publications.map(scholarlyArticle)]}>
+  <header class="hero">
+    <h1>{site.name}</h1>
+    <p class="hero-role">{site.role}, {site.department}, {site.school}, {site.institution}</p>
+    <p class="hero-role">Co-founder, {site.company}</p>
+    <p class="hero-place">{site.location}</p>
+
+    <dl class="contact">
+      {site.emails.map((e) => (
+        <>
+          <dt>{e.label}</dt>
+          <dd><a href={`mailto:${e.address}`}>{e.address}</a></dd>
+        </>
+      ))}
+    </dl>
+
+    <p class="actions">
+      {site.links.scholar && <a class="button" href={site.links.scholar} rel="me">Google Scholar</a>}
+      <a class="button ghost" href={site.cvPdf}>CV (PDF)</a>
+      {site.links.linkedin && <a class="button ghost" href={site.links.linkedin} rel="me">LinkedIn</a>}
+      {site.links.orcid && <a class="button ghost" href={site.links.orcid} rel="me">ORCID</a>}
+      {site.links.github && <a class="button ghost" href={site.links.github} rel="me">GitHub</a>}
+    </p>
+  </header>
+
+  <Fragment slot="aside">
+    {site.photo && (
+      <figure class="portrait">
+        <img src={site.photoPath} alt={`Portrait of ${site.name}`} width="400" height="500" fetchpriority="high" />
+      </figure>
+    )}
+    <div class="glance">
+      <p class="label">At a glance</p>
+      <dl>
+        {glance.map((g) => (
+          <div><dt>{g.value}</dt><dd>{g.label}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </Fragment>
+
+  <Section id="introduction" num="1" title="Introduction">
+    <div class="intro">
+      <p>
+        I am a Lecturer in the Department of STEAM Education, School of Education, Kathmandu
+        University. I teach information technology courses in the BTech Ed (IT) and BIT programs
+        and AI in STEAM Education in the master’s program. I also supervise undergraduate research
+        projects and develop curriculum for the department.
+      </p>
+      <p>
+        My research examines how information systems, digital platforms and policy changes affect
+        the decisions of users and firms, and how learning technologies shape the way students
+        learn. Most of my work draws on data from Nepal, including stock exchange records, expert
+        panels and student surveys. I work with time series econometrics, Double Machine Learning
+        and tree-based models, and I evaluate predictive results against simple benchmarks and
+        realistic costs. My current projects study shock transmission across Nepal Stock Exchange
+        sector indices and metacognitive learning behaviors in LMS-supported courses.
+      </p>
+      <p>
+        Before joining Kathmandu University full-time, I worked across banking, finance and
+        software. After studying commerce in high school and information management at
+        university, I worked as an IT intern at a commercial bank and as a financial analyst, and
+        began teaching at Kist College in 2019. In 2022 I co-founded Prajanya Soft, where I led
+        product development for fintech, healthcare and e-commerce systems until 2025, while
+        teaching part-time and completing my master’s degree in computer information systems.
+        This industry experience continues to inform the questions I study.
+      </p>
+    </div>
+    {site.openTo && (
+      <div class="note">
+        <p class="label">Research roles and collaboration</p>
+        <p>{site.openTo} <a href={`mailto:${site.emailPrimary}`}>Contact me</a>.</p>
+      </div>
+    )}
+  </Section>
+
+  <Section id="interests" num="2" title="Research interests">
+    <div class="interests">
+      {interests.map((i) => (
+        <div><h3>{i.title}</h3><p>{i.text}</p></div>
+      ))}
+    </div>
+    <p class="more"><a href="/research/">Research agenda</a></p>
+  </Section>
+
+  <Section id="current" num="3" title="Current research">
+    <article class="feature">
+      <p class="label">Working paper · Digital platforms and fintech</p>
+      <h3><a href={nepse.page}>{nepse.title}</a></h3>
+      <p class="byline">{site.name} · {nepse.year}</p>
+      <p>
+        This paper extends my master’s thesis using rebuilt data on ten NEPSE sector indices. A
+        data audit shows that a one-day misalignment in compiled market data is enough to produce
+        spurious Granger causality. On correctly aligned data, lead-lag links between sectors
+        largely disappear, while total connectedness has risen substantially since 2016.
+      </p>
+      <div class="table-wrap">
+        <table class="booktabs">
+          <caption><b>Table 1.</b> Main results</caption>
+          <thead><tr><th scope="col">Result</th><th scope="col" class="num">Value</th></tr></thead>
+          <tbody>
+            {featured.findings.map((f) => (
+              <tr><td>{f.label}</td><td class="num">{f.value}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="more"><a href={nepse.page}>Data, methods and results</a></p>
+    </article>
+
+    <article class="feature feature-2">
+      <p class="label">In progress · Educational technology</p>
+      <h3>{meta.title}</h3>
+      <p class="byline">{site.name} · {meta.year}</p>
+      <p>{metacognition.summary}</p>
+      <p class="stage"><span>Current stage</span> {metacognition.stage}</p>
+    </article>
+  </Section>
+
+  <Section id="publications" num="4" title="Publications">
+    {publications.map((p, i) => <Ref paper={p} n={i + 1} />)}
+    <p class="more"><a href="/publications/">All publications and presentations</a></p>
+  </Section>
+
+  <Section id="semester" num="5" title="Teaching this semester">
+    <ul class="courses">
+      {thisSemester.courses.map((c) => (
+        <li>
+          <span class="code">{c.code}</span>
+          <span class="course-title">{c.title}{c.note && <span class="course-note"> ({c.note})</span>}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="more"><a href="/teaching/">All courses, curriculum work and supervision</a></p>
+  </Section>
+
+  <Section id="path" num="6" title="Career path">
+    <div class="path">
+      {journey.map((j) => (
+        <div class="row step">
+          <span class="m">{j.years}</span>
+          <div class="step-body">
+            <h3>{j.href ? <a href={j.href}>{j.title}</a> : j.title}</h3>
+            <p>{j.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <Section id="news" num="7" title="News">
+    <div class="dated">
+      {news.map((n) => (
+        <div class="row">
+          <span class="m">{n.date}</span>
+          <p>{n.href ? <a href={n.href}>{n.text}</a> : n.text}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+</Base>

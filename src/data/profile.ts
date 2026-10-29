@@ -20,7 +20,7 @@ export const journey = [
   },
   {
     years: '2014–2018',
-    title: 'Bachelor of Information Management, Kist College, Nepal',
+    title: 'Bachelor of Information Management, Kist College (Nepal)',
     text: 'Ranked in the top five at Tribhuvan University in two semesters and topped my college in three. Served as President of the Sports Club and later of the IT Club.',
     href: '/background/#student',
   },
@@ -32,13 +32,13 @@ export const journey = [
   },
   {
     years: 'Nov 2019',
-    title: 'First teaching appointment, Kist College',
+    title: 'First teaching appointment, Kist College (Nepal)',
     text: 'Joined my alma mater as a lecturer in the BIM program one year after graduating, and continued teaching part-time at several colleges until 2025.',
     href: '/teaching/#earlier',
   },
   {
     years: '2020–2024',
-    title: 'Master of Computer Information System, NCIT',
+    title: 'Master of Computer Information System, NCIT College (Nepal)',
     text: 'Graduated as batch topper. My thesis on NEPSE sector indices was my first substantial piece of empirical research.',
   },
   {
@@ -49,13 +49,13 @@ export const journey = [
   },
   {
     years: '2024–2025',
-    title: 'Visiting Faculty and Curriculum Developer, Kathmandu University',
+    title: 'Visiting Faculty and Curriculum Developer, Kathmandu University (Nepal)',
     text: 'Taught in the BTech Ed (IT) program and developed new undergraduate and master’s syllabi for the Department of STEAM Education.',
     href: '/teaching/#curriculum',
   },
   {
     years: '2025–now',
-    title: 'Lecturer, Kathmandu University, Nepal',
+    title: 'Lecturer, Kathmandu University (Nepal)',
     text: 'Teaching, research supervision, curriculum development and the Focal Person role for five partner institutions. Published my first journal articles in 2026 and began a Delphi study on metacognitive learning in LMS-supported courses.',
     href: '/teaching/',
   },
@@ -148,7 +148,7 @@ export const service = [
 // ---------- background page ----------
 
 export const prajanya = {
-  period: 'Full-time from January 2022 to July 2025; co-founder since',
+  period: 'Full-time from January 2022 to July 2025; Now Co-founder',
   roles: 'Co-founder · Project Manager, later Director of Product Management',
   intro:
     'I co-founded Prajanya Soft, a software company based in Kathmandu, in January 2022. Until July 2025 I worked there full-time, first as Project Manager and then as Director of Product Management. The company has delivered web and mobile applications for more than ten clients in Nepal and abroad. I continue as co-founder alongside my full-time position at Kathmandu University.',
@@ -178,14 +178,14 @@ export const finance = [
   {
     years: '2019',
     title: 'Financial Analyst, Trading and Research Department',
-    org: 'Kriti Capital & Investments Ltd. (now Machhapuchchhre Capital)',
+    org: 'Kriti Capital & Investments Ltd. (now Machhapuchchhre Capital Limited)',
     when: 'March to July 2019',
     text: 'Analysed macroeconomic and development bank data and conducted fundamental and technical analysis of listed stocks for the trading and research team.',
   },
   {
     years: '2018',
     title: 'IT Intern, IT Department',
-    org: 'Century Commercial Bank Ltd. (now Prabhu Bank)',
+    org: 'Century Commercial Bank Ltd. (now Prabhu Bank Limited)',
     when: 'April to August 2018',
     text: '',
   },
@@ -195,20 +195,20 @@ export const education = [
   {
     years: '2020–2024',
     degree: 'Master of Computer Information System (MCIS)',
-    school: 'Nepal College of Information Technology, Pokhara University',
+    school: 'Nepal College of Information Technology, Pokhara University, Nepal',
     detail: 'Batch topper; university topper in the third semester.',
     extra: 'Thesis: Forecasting Stock Exchange Sector Indices Using Granger Causality and Vector Autoregressive Models.',
   },
   {
     years: '2014–2018',
     degree: 'Bachelor of Information Management (BIM)',
-    school: 'Kist College of Management, Tribhuvan University',
+    school: 'Kist College of Management, Tribhuvan University, Nepal',
     detail: 'University top five in the fifth and eighth semesters; college semester topper in the fifth, sixth and eighth semesters.',
   },
   {
     years: '2010–2012',
-    degree: 'Higher Secondary (CBSE), Commerce',
-    school: 'Rai School, Kathmandu',
+    degree: 'High School (Central Board of Secondary Education), Commerce',
+    school: 'Rai School, Kathmandu, Nepal',
     detail: 'Best Disciplined Student, 2011–12.',
   },
 ];

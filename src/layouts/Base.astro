@@ -91,6 +91,13 @@ const hasAside = Astro.slots.has('aside') || toc.length > 0;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-ZNH0PJHH5L"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNH0PJHH5L');
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>

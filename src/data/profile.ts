@@ -15,12 +15,12 @@ export const news = [
 export const journey = [
   {
     years: '2006–2012',
-    title: 'Schooling in Darjeeling and Kathmandu',
-    text: 'Completed ICSE schooling at Pinehall Academy, Darjeeling, and higher secondary education in commerce at Rai School, Kathmandu, where I received the Best Disciplined Student award (2011–12).',
+    title: 'Schooling in Darjeeling and Kathmandu ',
+    text: 'Completed ICSE schooling at Pinehall Academy, Darjeeling, India and higher secondary education in commerce at Rai School, Kathmandu, Nepal where I received the Best Disciplined Student award (2011–12).',
   },
   {
     years: '2014–2018',
-    title: 'Bachelor of Information Management, Kist College',
+    title: 'Bachelor of Information Management, Kist College, Nepal',
     text: 'Ranked in the top five at Tribhuvan University in two semesters and topped my college in three. Served as President of the Sports Club and later of the IT Club.',
     href: '/background/#student',
   },
@@ -43,7 +43,7 @@ export const journey = [
   },
   {
     years: '2022–2025',
-    title: 'Co-founder, Prajanya Soft',
+    title: 'Co-founder, Prajanya Soft (Nepal)',
     text: 'Worked full-time as co-founder, first as Project Manager and later as Director of Product Management, leading fintech, healthcare and e-commerce systems for clients in Nepal and abroad.',
     href: '/background/#industry',
   },
@@ -55,7 +55,7 @@ export const journey = [
   },
   {
     years: '2025–now',
-    title: 'Lecturer, Kathmandu University',
+    title: 'Lecturer, Kathmandu University, Nepal',
     text: 'Teaching, research supervision, curriculum development and the Focal Person role for five partner institutions. Published my first journal articles in 2026 and began a Delphi study on metacognitive learning in LMS-supported courses.',
     href: '/teaching/',
   },

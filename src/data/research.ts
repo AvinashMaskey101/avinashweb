@@ -59,7 +59,7 @@ export const workingPapers: Paper[] = [
   {
     id: 'maskey2026connectedness',
     title:
-      'Rising Connectedness, Weak Lead-Lag: Evidence from Nepal Stock Exchange Sector Indices Using Econometric and Machine Learning Methods',
+      'Do NEPSE Sectors Lead Each Other? Rising Connectedness and Weak Lead-Lag in the Nepal Stock Exchange',
     authors: ['Maskey, A.'],
     year: 2026,
     status: 'Working paper',
@@ -107,7 +107,7 @@ export const thesis: Paper = {
     'Forecasting Stock Exchange Sector Indices Using Granger Causality and Vector Autoregressive Models',
   authors: ['Maskey, A.'],
   year: 2024,
-  venue: 'Master’s thesis, Nepal College of Information Technology, Pokhara University',
+  venue: 'Master’s thesis, Nepal College of Information Technology, Pokhara University, Nepal',
   type: 'thesis',
   note: 'An adaptive VAR with an empirically selected window outperformed static and fixed rolling-window models, especially for development banks, finance companies and hydropower. Granger causality and impulse responses traced cross-sector shocks and pointed to banking as a major source of market volatility.',
 };

@@ -142,7 +142,7 @@ export const service = [
     text: 'Focal Person for the BTech Ed (IT) programs at Kathmandu University’s five partner institutions, responsible for admissions coordination, academic monitoring, assessment coordination and reporting to the department.',
   },
   { years: '2024–now', text: 'Curriculum and assessment development for the Department of STEAM Education.' },
-  { years: '2019–2025', text: 'Board examination question setting and internal assessment moderation.' },
+  { years: '2019–2025', text: 'Examination question setting and internal assessment moderation.' },
 ];
 
 // ---------- background page ----------

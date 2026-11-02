@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Section from '../components/Section.astro';
 import Ref from '../components/Ref.astro';
 import { site, interests } from '../data/site';
-import { workingPapers, publications, featured, metacognition } from '../data/research';
+import { workingPapers, publications, metacognition } from '../data/research';
 import { news, journey, thisSemester, kuCourses, curriculum } from '../data/profile';
 import { scholarlyArticle } from '../lib/cite';
 
@@ -122,23 +122,11 @@ const glance = [
       <h3><a href={nepse.page}>{nepse.title}</a></h3>
       <p class="byline">{site.name} · {nepse.year}</p>
       <p>
-        This paper extends my master’s thesis using rebuilt data on ten NEPSE sector indices. A
-        data audit shows that a one-day misalignment in compiled market data is enough to produce
-        spurious Granger causality. On correctly aligned data, lead-lag links between sectors
-        largely disappear, while total connectedness has risen substantially since 2016.
+        This paper extends my master’s thesis using rebuilt and audited data on ten NEPSE sector
+        indices. It studies lead-lag links and shock spillovers between sectors, and tests whether
+        machine learning forecasts would still pay after trading costs.
       </p>
-      <div class="table-wrap">
-        <table class="booktabs">
-          <caption><b>Table 1.</b> Main results</caption>
-          <thead><tr><th scope="col">Result</th><th scope="col" class="num">Value</th></tr></thead>
-          <tbody>
-            {featured.findings.map((f) => (
-              <tr><td>{f.label}</td><td class="num">{f.value}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="more"><a href={nepse.page}>Data, methods and results</a></p>
+      <p class="more"><a href={nepse.page}>Research questions and methods</a></p>
     </article>
 
     <article class="feature feature-2">

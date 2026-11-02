@@ -130,27 +130,21 @@ export const metacognition = {
 // The featured working paper (its own page at /research/nepse-connectedness/)
 // ------------------------------------------------------------
 export const featured = {
-  abstract:
-    'Little is known about how shocks travel between sector indices in frontier equity markets. This paper studies ten sector indices of the Nepal Stock Exchange (NEPSE) from July 2018 to October 2026, with a six-sector panel from 2014 and a twelve-sector panel from 2021 as checks. It first sets out a date-alignment protocol and shows that one- and two-day shifts in a compiled dataset used in earlier work are enough to produce spurious Granger causality. On the aligned data, heteroskedasticity-robust Granger tests find 13 of 90 directed links at the 5% level, none of which survive multiple-testing corrections. Generalized impulse responses show that shocks reach other sectors almost entirely on the same day. The Diebold-Yilmaz total spillover index is 77.9%, with life insurance and development banks as the main net transmitters and hotels as the main net receiver. Rolling and time-varying parameter estimates show total connectedness rising from 26.5% in 2016 to 77.7% in 2022, while commercial banks turned from the main transmitter into a net receiver. A negative market-lead coefficient after 2021 turns out to be relative momentum, not reversal. Out of sample, a random forest beats the random walk in all ten sectors and tree models predict direction on up to 62% of days, while a linear VAR does worse than the random walk. After NEPSE trading costs, however, no direction strategy beats buy and hold.',
-
-  findings: [
-    { value: '0 of 90', label: 'Directed Granger links that survive multiple-testing corrections' },
-    { value: '77.9%', label: 'Diebold-Yilmaz total spillover index across ten sectors' },
-    { value: '26.5% → 77.7%', label: 'Rise in total connectedness, 2016 to 2022' },
-    { value: '62%', label: 'Best next-day direction accuracy (tree models), gone after trading costs' },
-  ],
+  summary:
+    'This working paper asks how shocks travel between sector indices of the Nepal Stock Exchange (NEPSE), a frontier market that has received little research attention. It extends my master’s thesis with rebuilt and audited daily data on ten sector indices. The paper combines lead-lag tests, connectedness measures and out-of-sample machine learning forecasts, and judges the forecasts by whether they would still pay after NEPSE trading costs.',
 
   questions: [
-    'Do past returns in one NEPSE sector help predict next-day returns in another once heteroskedasticity and multiple testing are taken into account?',
-    'How strongly are NEPSE sectors connected, which sectors transmit and which receive shocks, and how has this changed over time?',
-    'Can machine learning models use cross-sector information to forecast next-day sector returns better than simple benchmarks, and which inputs do they use?',
-    'Is any forecasting gain large enough to survive NEPSE trading costs?',
+    'Do past returns in one NEPSE sector help predict next-day returns in another, once volatility and multiple testing are accounted for?',
+    'How connected are NEPSE sectors, which sectors transmit and which receive shocks, and how has this changed over time?',
+    'Can machine learning models use cross-sector information to forecast better than simple benchmarks?',
+    'Would any forecasting gain survive real trading costs?',
   ],
 
-  panels: [
-    { panel: 'B (main)', period: 'Jul 2018 to Oct 2026', sectors: 10, days: '1,871', members: 'Commercial banks, development banks, finance, hotels, hydropower, life insurance, non-life insurance, microfinance, manufacturing, others' },
-    { panel: 'A (long)', period: 'Jan 2014 to Oct 2026', sectors: 6, days: '2,881', members: 'Commercial banks, development banks, finance, hotels, hydropower, others' },
-    { panel: 'C (full)', period: 'Mar 2021 to Oct 2026', sectors: 12, days: '1,311', members: 'Panel B plus investment and trading' },
+  approach: [
+    { title: 'Data', text: 'Daily closing values and turnover for NEPSE sector indices from the public index history, audited against the NEPSE trading calendar and aligned before any model is run.' },
+    { title: 'Lead-lag and spillovers', text: 'A vector autoregression with heteroskedasticity-robust Granger tests and multiple-testing corrections, generalized impulse responses, and Diebold-Yilmaz connectedness traced with rolling windows and a time-varying parameter VAR.' },
+    { title: 'Forecasting', text: 'An out-of-sample comparison of a random walk, AR, VAR, random forest and XGBoost, with Diebold-Mariano tests and SHAP values to show which inputs the models use.' },
+    { title: 'Economic value', text: 'Each forecast is turned into a long-or-cash trading rule and evaluated after NEPSE transaction costs.' },
   ],
 
   keywords: [
